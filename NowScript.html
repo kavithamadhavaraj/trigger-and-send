@@ -1,0 +1,166 @@
+<script>
+
+  //hide error messge from form
+  function hideErrMsg(){
+    $(".msg").removeClass("error").html("");
+    $("input").removeClass("error");
+  }
+  
+  //show error message while post
+  function showMsg(selector,message){
+    hideErrMsg();
+    $(selector).find("input").addClass("error");
+    $(selector).find(".msg").addClass("error").html(message);
+    
+  }
+ 
+  
+  /*
+  # getting range on keyup
+  */
+  var globaltimeout = null;  
+  document.getElementById("range").addEventListener("keyup", function(){
+    var ts = this;
+    if(globaltimeout!=null) clearTimeout(globaltimeout);
+    globaltimeout = setTimeout(function(){    
+      var range = ts.value;
+      range = range.replace(/ /g,'');
+      var indx = range.indexOf(":");
+      if(indx !== -1){
+        var res = range.charAt(indx+1);
+        if (res !== ''){
+          google.script.run.selectRange(range);
+          hideErrMsg();
+        }
+        else{
+          google.script.run.showAlert("Not a valid range", "Warning");
+        }
+      }
+    }, 600);
+  });
+  
+  
+  
+  function reset(){
+    google.script.run.withFailureHandler(onFailurePost).showSidebar();
+  }
+
+function postNow(e, form){
+  e.preventDefault();
+  var data = serialize(document.getElementById(form));
+  // Know which option the user has opted for "all" / "manual" -- KAVITHA
+  var option = document.getElementById("selectRange").value;
+  hideErrMsg();
+  
+  //decode values due to some reason
+  data.url = decodeURIComponent(data.url);
+  data.range = decodeURIComponent(data.range);
+  data.row_num = decodeURIComponent(data.row_num);
+  
+  data.option = option;
+   if(!validate("url", data.url)){
+    showMsg(".urlBox", "Invalid URL!");
+    return false
+  }
+  
+  if(data.url.indexOf(BLACKLIST_URL) !== -1){
+    showMsg(".urlBox", "Cannot use google sheet URL");
+    return false;
+  }
+
+  // Some usual validations - BEGIN -- KAVITHA
+  if((option === "all") && ((data.row_num === "") || (data.row_num === undefined)|| (data.row_num === null) || (parseInt(data.row_num)<=1))){
+    showMsg(".rowBox", "Mention a valid row number to start.");
+    return false
+  }
+  
+  if(option === "manual"){
+    if (checkValid(data.range)){
+      google.script.run.withFailureHandler(onFailurePost).prepareData(data);
+      hideErrMsg();
+    }
+    else{
+      showMsg("#manual", "Invalid Range!");
+    }
+  }
+  else{
+    google.script.run.withFailureHandler(onFailurePost).prepareData(data);
+    hideErrMsg();
+  }
+  // Some usual validations - END -- KAVITHA
+
+}
+  
+//check if var is undefined or blank
+function checkValid(range){
+  // Check if the range is valid one and does not use 1st row -- KAVITHA
+  var rangeNum = range.replace(/[^\d:]/g, '').split(":");  
+  return (range === undefined || range === '' || range === null || rangeNum[0] === "1" || rangeNum[1] === "1") ? false : true;
+}
+
+function serialize(form){
+
+  if (!form || form.nodeName !== "FORM") {
+    return;
+  }
+  var i, j,
+    obj = {};
+  for (i = form.elements.length - 1; i >= 0; i = i - 1) {
+    if (form.elements[i].name === "") {
+      continue;
+    }
+    switch (form.elements[i].nodeName) {
+    case 'INPUT':
+      switch (form.elements[i].type) {
+      case 'text':
+      case 'number':  // Added support to number -- KAVITHA
+      case 'hidden':
+      case 'password':
+      case 'button':
+      case 'reset':
+      case 'submit':
+        obj[form.elements[i].name] = encodeURIComponent(form.elements[i].value);
+        break;
+      case 'checkbox':
+      case 'radio':
+        if (form.elements[i].checked) {
+          obj[form.elements[i].name] = encodeURIComponent(form.elements[i].value);
+        }
+        break;
+      case 'file':
+        break;
+      }
+      break;
+    case 'TEXTAREA':
+      obj[form.elements[i].name] = encodeURIComponent(form.elements[i].value);
+      break;
+    case 'SELECT':
+      switch (form.elements[i].type) {
+      case 'select-one':
+        obj[form.elements[i].name] = encodeURIComponent(form.elements[i].value);
+        break;
+      case 'select-multiple':
+        for (j = form.elements[i].options.length - 1; j >= 0; j = j - 1) {
+          if (form.elements[i].options[j].selected) {
+            obj[form.elements[i].name] = encodeURIComponent(form.elements[i].options[j].value);
+          }
+        }
+        break;
+      }
+      break;
+    case 'BUTTON':
+      switch (form.elements[i].type) {
+      case 'reset':
+      case 'submit':
+      case 'button':
+        obj[form.elements[i].name] = encodeURIComponent(form.elements[i].value);
+        break;
+      }
+      break;
+    }
+  }
+  return obj;
+}
+  
+//end of send now functions
+</script> 

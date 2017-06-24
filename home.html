@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="https://ssl.gstatic.com/docs/script/css/add-ons1.css">  
+  <style>
+.ng-hide, .actBox, .hide{
+  display:none;
+}
+.show{
+ display: block !important;
+}
+
+.pd2{
+padding:20px;
+}
+.mrT16{
+ margin-top: 16px;
+}
+.mrB16{
+margin-bottom:16px;
+}
+
+.form-group input.block{
+  width:100%;
+}
+
+.note{
+ background:#fffce6;
+ border:1px solid #fff176;
+ padding:10px;
+ color: #555;
+}
+
+.graynote{
+ background:#f5f5f5;
+ border:1px solid #eee;
+ padding:10px;
+ color: #555; 
+ word-break: break-all;
+}
+
+.branding-below{
+ margin-bottom: 42px;
+}
+
+.bottom{
+ background:#fff;
+ position:fixed;
+ bottom:0;
+}
+
+input.error{
+ border:1px solid #dd4b39;
+}
+
+.error{
+ color:#dd4b39;
+}
+.success{
+ color:#3d9400;
+}
+
+#errorBox{
+ word-break: break-all;
+}
+select{
+text-align: left;
+}
+select option{
+padding:5px;
+}
+
+#sarfaraz{
+list-style-type: none;
+}
+
+#sarfaraz li{
+padding: 5px 0;
+border-bottom: 2px solid black;
+}
+
+#sarfaraz li span{
+ display: block;
+ width: 100%;
+}
+
+span.name{
+  color: red;
+}
+span.url{
+  color: blue
+}
+a.danger{
+color: red
+}
+</style>
+</head>
+<body>
+ 
+ <div class="sidebar branding-below">
+  
+  
+  <div class="block form-group mrB16">
+    <label for="selectAction">Trigger Data</label>
+    <select id="selectAction" onChange="selectChangeOccuredParent(this)">
+      <option value="#now" selected>Now</option>
+      <!-- Added the scheduling functionality -- KAVITHA -->
+      <option value="#schedule">Schedule</option>
+      <option value="#formSubmit">On Form Submit</option>
+      <option value="#onChange">On Event change</option>
+    </select>
+  </div>
+ 
+<!-- now code start-->
+<?!= include("now");?>
+<!-- now code end -->
+
+<!-- form submit box-->
+<div id="formSubmit" class="animElemParent ng-hide">
+    
+    <div class="block form-group url mrB16">
+      <label for="formSubmitUrl">Send Data</label>
+      <input class="block" type="text" id="formSubmitUrl" name="formSubmitUrl" placeholder="Enter URL where you want to forward data" />
+      <span class="secondary">You can get your URL from <a href="https://viasocket.com/" target="_blank" >Socket</a></span>
+      <div class="msg"></div>
+    </div>
+  
+    <div class="block form-group  mrB16">
+      <button class="action" id="event" onClick="startFormEvent();">Create form submit event</button>
+    </div>
+    
+    <div id="trigger-info" class="hide graynote">
+     
+    </div>
+  
+    <div class="note mrT16">    
+      <b>The URL</b> will be triggered whenever Google Form data is added in the sheet
+    </div>
+
+</div>
+<!-- form submit box end-->
+
+<!-- form submit box-->
+<div id="formSubmit" class="animElemParent ng-hide">
+    
+    <div class="block form-group url mrB16">
+      <label for="formSubmitUrl">Send Data</label>
+      <input class="block" type="text" id="formSubmitUrl" name="formSubmitUrl" placeholder="Enter URL where you want to forward data" />
+      <span class="secondary">You can get your URL from <a href="https://viasocket.com/" target="_blank" >Socket</a></span>
+      <div class="msg"></div>
+    </div>
+  
+    <div class="block form-group  mrB16">
+      <button class="action" id="event" onClick="startFormEvent();">Create form submit event</button>
+    </div>
+    
+    <div id="trigger-info" class="hide graynote">
+     
+    </div>
+  
+    <div class="note mrT16">    
+      <b>The URL</b> will be triggered whenever Google Form data is added in the sheet
+    </div>
+
+</div>
+<!-- form submit box end-->
+
+
+<!-- change box-->
+<div id="onChange" class="animElemParent ng-hide">
+    
+    <div class="block form-group url mrB16">
+      <label for="changeUrl">Send Data</label>
+      <input class="block" type="text" id="changeUrl" name="changeUrl" placeholder="Enter URL where you want to forward data" />
+      <span class="secondary">You can get your URL from <a href="https://viasocket.com/" target="_blank" >Socket</a></span>
+      <div class="msg"></div>
+    </div>
+  
+    <div class="block form-group  mrB16">
+      <button class="action" id="event" onClick="startChangeEvent();">Create change event</button>
+    </div>
+    
+    <div id="change-trigger-info" class="hide graynote">
+    </div>
+    
+    <div class="note mrT16">    
+      <b>Any changes</b> or <b>update</b> in the sheet will post affected Row to the URL
+    </div>  
+
+</div>
+<!-- change code end -->
+
+<!-- schedule box begin - KAVITHA-->
+<div id="schedule" class="animElemParent ng-hide">
+    
+    <div class="block form-group url mrB16">
+      <label for="scheduleUrl">Send Data</label>
+      <input class="block" type="text" id="scheduleUrl" name="scheduleUrl" placeholder="Enter URL where you want to forward data" />
+      <span class="secondary">You can get your URL from <a href="https://viasocket.com/" target="_blank" >Socket</a></span>
+      <div class="msg"></div>
+    </div>
+  
+    <div class="block form-group  mrB16">
+      <button class="action" id="event" onClick="scheduleEvent();">Schedule event</button>
+    </div>
+    
+    <div id="schedule-trigger-info" class="hide graynote">
+    </div>
+    
+    <div class="note mrT16">    
+      <b>Entire data </b> of your sheet will be posted to the URL one by one on hourly basis (Maximum of 200 Rows / Hour)
+    </div>  
+
+</div>
+<!-- schedule code end - KAVITHA -->
+
+
+ <div class="mrT16">
+   The first row is not to be used as it is the header and can only be used as a key for sending data.
+ </div>
+ 
+ <div id="errorBox"></div>
+ 
+ <div class="mrT16 secondary">
+ Having troubles in add-on? Make a <a class="" onclick="freshStart()" href="javascript:void(0)">fresh start</a><br> It will delete all your trigger and send configuration data.
+ </div>
+
+</div>
+
+<?!= include("jqlite");?>
+
+<script>
+  var BLACKLIST_URL = 'https://docs.google.com';
+  
+  function getUserData(){
+    console.log("getting user data");
+    google.script.run.withFailureHandler(onFailurePost).withSuccessHandler(showUserData).getUserData();
+  }
+  
+  function showUserData(data){
+    console.log(data, "showUserData");
+  }
+
+  window.addEventListener('load', function() {
+    selectChangeOccuredParent(document.getElementById("selectAction"));
+    console.log("version: 33");
+    getUserData();
+  });
+  
+  function freshStart(){
+    console.log("freshStart");
+    google.script.run.freshStart();
+  }
+  
+  //validate func
+  function validate(type,value){      
+   var valid = false;
+   
+   switch(type){
+    case "url":    
+     var url = value;
+     var patt = /^(https?|ftp):\/\/([a-zA-Z0-9.-]+(:[a-zA-Z0-9.&%$-]+)*@)*((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])){3}|([a-zA-Z0-9-]+\.)*[a-zA-Z0-9-]+\.(com|edu|gov|int|mil|net|org|biz|arpa|info|name|pro|aero|coop|museum|[a-zA-Z]{2}))(:[0-9]+)*(\/($|[a-zA-Z0-9.,?'\\+&%$#=~_-]+))*$/;
+     valid = patt.test(url);
+    break;
+   }
+   
+   return valid;   
+  }
+  
+  //failure function
+  function onFailurePost(e){
+    google.script.run.postFailureReason("onFailurePost", e);
+    showMsg("#errorBox", e);
+  }
+
+  //on selectbox changed parent
+  function selectChangeOccuredParent(ths){
+     showHideElem(ths.value, ".animElemParent");
+     hideErrMsg();
+  }
+  
+  //on selectbox changed child
+  function selectChangeOccured(ths){
+     // Conditional hiding and showing of row number and range box based on option selected - BEGIN -- KAVITHA
+     var elem = "#"+ths.value;
+     if(elem === '#manual'){
+       $("#all").hide();
+       $(".animElem").addClass("show");
+       return;
+     }
+     if(elem === '#all'){
+       $("#all").show();
+       $(".animElem").removeClass("show");
+       return;
+     }
+     // Conditional hiding and showing of row number and range box based on option selected - END -- KAVITHA
+
+     showHideElem(elem, ".animElem");
+  }
+
+  //show hide blocks conditionally
+  function showHideElem(elem, target){
+    $(target).removeClass("show");
+    $(elem).addClass("show");
+    
+    if (elem === '#formSubmit'){
+      getOnChangeData();
+    }
+    else if (elem === '#testing'){
+      getTestingInfo();
+    }
+    else if (elem === '#onChange'){
+      // get change data
+      getChangeTriggerInfo();
+    }
+    //Added support to schedule -- KAVITHA
+    else if (elem === '#schedule'){
+      // get change data
+      getScheduleTriggerInfo();
+    }
+  }
+  
+  
+  /* home page script end */
+  
+  /* change page script */
+function startChangeEvent(){
+  var val = document.getElementById('changeUrl').value;
+  if(!validate("url", val)){
+    showMsg(".url", "Invalid URL!");
+    return false
+  }
+  if(val.indexOf(BLACKLIST_URL) !== -1){
+    showMsg(".url", "Cannot use google sheet URL");
+    return false;
+  }
+  google.script.run.withFailureHandler(onFailurePost).withSuccessHandler(getChangeTriggerInfo).autoChangeInit(val);
+}
+
+function showTriggerInfoChange(data){
+  console.log(data, "showTriggerInfoChange");
+  if(data){
+    data = JSON.parse(data);
+    var temp = '<div><b>Current trigger</b><br></div><span id="current-url">'+data.URL+'</span><br/><a href="javascript:void(0);" onclick="deleteTriggerChange('+data.id+')">Delete</a><br/>';
+    $("#change-trigger-info").removeClass("hide");
+    $("#change-trigger-info").html(temp);
+  }
+}
+
+
+function deleteCallbackChange(){
+  $("#change-trigger-info").addClass("hide");
+}
+
+function deleteTriggerChange(id){
+  console.log("deleteTriggerChange", id);
+  google.script.run.withSuccessHandler(deleteCallbackChange).deleteTrigger('ON_EDIT');
+}
+
+function getChangeTriggerInfo(){
+  hideErrMsg();
+  google.script.run.withSuccessHandler(showTriggerInfoChange).getUserChangeTriggers();
+}
+/* change page script end */
+
+/* schedule script begin -KAVITHA */
+function scheduleEvent(){
+  var val = document.getElementById('scheduleUrl').value;
+  if(!validate("url", val)){
+    showMsg(".url", "Invalid URL!");
+    return false
+  }
+  if(val.indexOf(BLACKLIST_URL) !== -1){
+    showMsg(".url", "Cannot use google sheet URL");
+    return false;
+  }
+  google.script.run.withFailureHandler(onFailurePost).withSuccessHandler(getScheduleTriggerInfo).scheduleInit(val);
+}
+
+function showTriggerInfoSchedule(data){
+  console.log(data, "showTriggerInfoSchedule");
+  if(data){
+    data = JSON.parse(data);
+    var temp = '<div><b>Current trigger</b><br></div><span id="current-url">'+data.URL+'</span><br/><a href="javascript:void(0);" onclick="deleteTriggerSchedule('+data.id+')">Delete</a><br/>';
+    $("#schedule-trigger-info").removeClass("hide");
+    $("#schedule-trigger-info").html(temp);
+  }
+}
+
+
+function deleteCallbackSchedule(){
+  $("#schedule-trigger-info").addClass("hide");
+}
+
+function deleteTriggerSchedule(id){
+  console.log("deleteTriggerSchedule", id);
+  google.script.run.withSuccessHandler(deleteCallbackSchedule).deleteTrigger('ON_SCHEDULE');
+}
+
+function getScheduleTriggerInfo(){
+  hideErrMsg();
+  google.script.run.withSuccessHandler(showTriggerInfoSchedule).getScheduleTriggers();
+}
+/* schedule script end - KAVITHA */
+
+
+/*form submit*/
+function showOnChangeData(data){
+  console.log(data, "showOnChangeData");
+  if(data){
+    data = JSON.parse(data);
+    var temp = '<div><b>Current trigger</b><br/></div><span id="current-url">'+data.URL+'</span><br/><a href="javascript:void(0);" onclick="deleteTriggerForm('+data.id+')">Delete</a><br/>';
+    $("#trigger-info").removeClass("hide");
+    $("#trigger-info").html(temp);
+  }
+}
+
+function deleteCallback(){
+  $("#trigger-info").addClass("hide");
+}
+
+function deleteTriggerForm(id){
+  console.log("deleteTriggerForm", id);
+  google.script.run.withSuccessHandler(deleteCallback).deleteTrigger('ON_FORM_SUBMIT');
+}
+
+function getOnChangeData(){
+  hideErrMsg();
+  google.script.run.withSuccessHandler(showOnChangeData).getUserFormTriggers();
+}
+
+function startFormEvent(){
+  var val = document.getElementById('formSubmitUrl').value;
+  if(!validate("url", val)){
+    showMsg(".url", "Invalid URL!");
+    return false
+  }
+  if(val.indexOf(BLACKLIST_URL) !== -1){
+    showMsg(".url", "Cannot use google sheet URL");
+    return false;
+  }
+  google.script.run.withFailureHandler(onFailurePost).withSuccessHandler(getOnChangeData).autoFormSubmitInit(val);
+}
+/*end form submit*/
+  
+</script>
+
+
+<?!= include("NowScript");?>
+
+
+
+</body>
+</html>
+

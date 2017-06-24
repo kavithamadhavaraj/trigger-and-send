@@ -1,0 +1,55 @@
+<div id="now" class="animElemParent ng-hide">
+<form name="nowForm" id="nowForm" onSubmit="return false;">
+  
+  <div class="block form-group urlBox">
+    <label for="url">Send Data</label>
+    <input class="block" type="text" id="url" name="url" placeholder="Enter URL where you want to forward data" />
+    <span class="secondary">You can get your URL from <a href="https://viasocket.com/" target="_blank" >Socket</a></span>
+    <div class="msg"></div>
+  </div>
+  
+  <!-- Change in ID's and added the row_number box to denote from which row to start sending data - BEGIN -- KAVITHA -->
+  <div class="block form-group">
+    <label class="lbl">Select Range</label>
+    <select id="selectRange" name="selectRange" onChange="selectChangeOccured(this)">
+      <option value="all" selected>All columns</option>
+      <option value="manual">Manual Range</option>
+    </select>
+  </div> 
+  
+  <div id="all" class="block form-group rowBox">
+    <label for ="row_num">Row Number to start:</label>
+    <input class="block" type="number" id="row_num" name="row_num" placeholder="2" />
+    <div class="msg"></div>
+  </div> 
+
+   <div id="manual" class="block form-group ng-hide animElem rangeBox">
+    <label for="range">Range in A1 Notation</label>
+    <input class="block" type="text" id="range" name="range" placeholder="A2:D8" />
+    <div class="msg"></div>
+  </div>
+  <!-- Change in ID's and added the row_number box to denote from which row to start sending data - END -- KAVITHA -->
+ 
+
+
+  
+  <!-- DEPRECATED FUNCTIONALITY  -- KAVITHA
+  <div class="block form-group">
+    <div>
+      <input type="checkbox" name="sendOnce" id="sendOnce" value="on" />
+      <label for="sendOnce">I wish to send data at once</label>
+    </div>
+    <span class="secondary">If not checked, row wise data will be send</span>
+  </div>
+  -->
+  
+  <div class="block form-group">
+    <button class="action" onClick="postNow(event, 'nowForm');">Post</button>
+  </div>
+    <!-- Let users know how many rows can be sent at the max -- KAVITHA -->
+    <div class="note mrT16">    
+     Maximum of 200 rows will be sent at a time. To send more that 200 rows, repeat the process by specifying new row number.
+   </div>
+
+</form>
+</div>
